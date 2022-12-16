@@ -45,7 +45,10 @@ public class Main {
                 String[] valueArray = csvLine.split(",");
                 for (int i = 0; i < valueArray.length; i++) {
                     valueArray[i] = valueArray[i].replaceAll("\\\\n", System.lineSeparator());
+                    variableNameToValueMap.put(variableNameList.get(i), valueArray[i]);   
                 }
+
+                
                 
                 // Process the template
                 for (String line : textLineList) {
@@ -57,10 +60,8 @@ public class Main {
                             String newWord = word.substring(word.indexOf("<<") + 2, word.indexOf(">"));
                         
                             // look up the value of the new word
-                            int i = variableNameList.indexOf(newWord);
-                            String value = valueArray[i];
+                            String value = variableNameToValueMap.get(newWord);
                 
-
                             line = line.replace("<<" + newWord + ">>", value);
     
                         }
