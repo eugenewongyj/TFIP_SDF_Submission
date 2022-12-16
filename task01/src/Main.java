@@ -1,3 +1,4 @@
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -10,58 +11,71 @@ import java.util.Map;
 
 public class Main {
     public static void main(String[] args) {
-        // Cannot create a class to store the variables because the variable name change
-        List<String> txtLineList = new ArrayList<>();
+        // To run application
+        // <program> <CSV file> <template file>
+       
+        String csvFile = args[0];
+        String textFile = args[1];
+
+        List<String> textLineList = new ArrayList<>();
         Map<String, String> variableNameToValueMap = new HashMap<>();
 
         try {
-            FileReader fileReaderForTxt = new FileReader("task01/thankyou.txt");
-            BufferedReader bufferedReaderForTxt = new BufferedReader(fileReaderForTxt);
-            String txtLine = "";
+            FileReader fileReaderForText = new FileReader(textFile);
+            BufferedReader bufferedReaderForText = new BufferedReader(fileReaderForText);
+            String textLine = "";
 
-            while ((txtLine = bufferedReaderForTxt.readLine()) != null) {
-                txtLineList.add(txtLine);
+            while ((textLine = bufferedReaderForText.readLine()) != null) {
+                textLineList.add(textLine);
             }
 
-            bufferedReaderForTxt.close();
+            bufferedReaderForText.close();
 
-            FileReader fileReaderForCsv = new FileReader("task01/thankyou.csv");
+            FileReader fileReaderForCsv = new FileReader(csvFile);
             BufferedReader bufferedReaderForCsv = new BufferedReader(fileReaderForCsv);
 
             String headers = bufferedReaderForCsv.readLine();
-            String[] variableNames = headers.split(",");
-            List<String> variableNameList = Arrays.asList(variableNames);
+            String[] variableNameArray = headers.split(",");
+            List<String> variableNameList = Arrays.asList(variableNameArray);
             // Checking to see whether variableNameList is correct
             // System.out.println(variableNameList);
 
             String csvLine = "";
             while ((csvLine = bufferedReaderForCsv.readLine()) != null) {
-                String[] values = csvLine.split(",");
+                String[] valueArray = csvLine.split(",");
+                for (int i = 0; i < valueArray.length; i++) {
+                    valueArray[i] = valueArray[i].replaceAll("\\\\n", System.lineSeparator());
+                }
                 
                 // Process the template
-                for (String line : txtLineList) {
+                for (String line : textLineList) {
            
                     // find all the words with <<>>
                     String[] words = line.split(" ");
                     for (String word : words) {
-                        if (word.startsWith("<<")) {
-                            String newWord = word.substring(2, word.indexOf(">"));
+                        if (word.contains("<<")) {
+                            String newWord = word.substring(word.indexOf("<<") + 2, word.indexOf(">"));
                         
                             // look up the value of the new word
                             int i = variableNameList.indexOf(newWord);
-                            String value = values[i];
-                            System.out.println(value);
+                            String value = valueArray[i];
+                
 
                             line = line.replace("<<" + newWord + ">>", value);
+    
                         }
                     }
-                    // System.out.println(line);
+         
+                    System.out.println(line);
                 }
-
 
             }
 
             bufferedReaderForCsv.close();
+
+            // Notes
+            // Cannot create a class to store the variables because the variable name change
+            // Combine template list into 
 
 
 
