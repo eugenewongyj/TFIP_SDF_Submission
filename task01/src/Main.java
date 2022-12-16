@@ -50,11 +50,12 @@ public class Main {
                             // look up the value of the new word
                             int i = variableNameList.indexOf(newWord);
                             String value = values[i];
+                            System.out.println(value);
 
                             line = line.replace("<<" + newWord + ">>", value);
                         }
                     }
-                    System.out.println(line);
+                    // System.out.println(line);
                 }
 
 
